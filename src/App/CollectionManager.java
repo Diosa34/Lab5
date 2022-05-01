@@ -31,9 +31,11 @@ public class CollectionManager {
      * Merge collection from file and this one
      *
      * @param collectionFromFile collection was given from file
+     * @param id the last id from file
      */
-    public void mergeCollections(LinkedList<HumanBeing> collectionFromFile) {
+    public void mergeCollections(LinkedList<HumanBeing> collectionFromFile, Long id) {
         collection.addAll(collectionFromFile);
+        this.id = id;
     }
 
     /**

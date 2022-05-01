@@ -9,13 +9,16 @@ public enum WeaponType {
     KNIFE,
     BAT;
 
-    static WeaponType[] nameWeaponType = WeaponType.values();
-
     public static void outputWeaponType() {
-        for (WeaponType element: nameWeaponType) {
-            System.out.print(element + " ");
+        int cnt = 0;
+        for (WeaponType element: WeaponType.values()) {
+            System.out.println(element + " - " + cnt);
+            cnt++;
         }
-        System.out.print(": ");
+    }
+
+    public static WeaponType stringValue(String input) {
+        return WeaponType.values()[Integer.parseInt(input)];
     }
 
 }

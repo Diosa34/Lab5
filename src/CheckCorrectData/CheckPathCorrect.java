@@ -16,7 +16,8 @@ public class CheckPathCorrect {
      */
     public boolean checkPath(String args[]) {
 
-        if (args.length == 0 || args[0].trim() == "") {
+        if (args.length == 0 || args[0] == null || args[0].trim() == "") {
+            System.out.println("Не инициализирована переменная");
             return false;
         }
 

@@ -23,27 +23,15 @@ public class Main {
         CollectionManager collectionManager = new CollectionManager();
         CommandsList commandsList = new CommandsList(collectionManager);
 
-        if (args.length > 0) {
-            ParserFromXml parserFromXml = new ParserFromXml();
-            parserFromXml.parser(args);
-            collectionManager.mergeCollections(parserFromXml.getCollection());
+        ParserFromXml parserFromXml = new ParserFromXml();
+        parserFromXml.parser(args);
+        collectionManager.mergeCollections(parserFromXml.getCollection(), parserFromXml.getLastIdFromFile());
 
-            Scanner input = new Scanner(System.in);
-            try {
-                while (true) {
-                    System.out.println("\n" + "Введите команду");
-                    String command = input.nextLine();
-                    commandsList.execute(command, false);
-                }
-            }
-            catch (NoSuchElementException e) {
-                System.out.println("Завершение программы");
-                return;
-            }
-
-        } else {
-            System.out.println("Не указан обязательный аргумент - файл.");
-            exit(1);
+        Scanner input = new Scanner(System.in);
+        while (true) {
+            System.out.print("Введите команду: ");
+            String command = input.nextLine();
+            commandsList.execute(command, false);
         }
     }
 }

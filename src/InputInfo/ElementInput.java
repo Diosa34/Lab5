@@ -143,15 +143,15 @@ public class ElementInput {
     public void weaponTypeInput() {
         while (true) {
             Scanner input = new Scanner(System.in);
-            System.out.print("Введите тип оружия. Возможные варианты - ");
+            System.out.println("Введите число, соответствующее выбранному типу оружия. Возможные варианты: ");
             WeaponType.outputWeaponType();
             String inputWeaponType = input.nextLine().trim();
 
             if (check.checkWeaponType(inputWeaponType)== 1) {
-                weaponType = WeaponType.valueOf(inputWeaponType);
+                weaponType = WeaponType.stringValue(inputWeaponType);
                 break;
             }
-            System.out.println("Введите слово из предложенного списка.");
+            System.out.println("Введите число из предложенного списка.");
         }
     }
 

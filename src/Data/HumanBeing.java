@@ -137,8 +137,8 @@ public class HumanBeing implements Comparable<HumanBeing>{
 
     @Override
     public int compareTo(HumanBeing o) {
-        if (this.impactSpeed == o.impactSpeed) return 0;
-        if (this.impactSpeed < o.impactSpeed) return -1;
+        if (this.id == o.id) return 0;
+        if (this.id < o.id) return -1;
         return 1;
     }
 }

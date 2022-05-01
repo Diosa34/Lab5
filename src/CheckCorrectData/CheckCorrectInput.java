@@ -7,11 +7,13 @@ import Data.WeaponType;
  * CheckCorrectInput class
  */
 public class CheckCorrectInput {
+
     /**
      * @param x coordinate x
      * @return is x correct
      */
     public int checkCoordinateX(Float x) {
+        if (x == null) return 0;
         if (Coordinates.checkValidX(x)) return 1;
         return 0;
     }
@@ -22,6 +24,7 @@ public class CheckCorrectInput {
      * @return is y correct
      */
     public int checkCoordinateY(Float y) {
+        if (y == null) return 0;
         if (Coordinates.checkValidY(y)) return 1;
         return 0;
     }
@@ -32,6 +35,7 @@ public class CheckCorrectInput {
      * @return is name correct
      */
     public int checkName(String name) {
+        if (name == null) return 0;
         if (!name.equals("0") && !name.equals("")) return 1;
         return 0;
     }
@@ -63,6 +67,18 @@ public class CheckCorrectInput {
      */
     public int checkWeaponType(String weaponType) {
         try {
+            int value = Integer.parseInt(weaponType);
+            if (value >= 0 && value < WeaponType.values().length) return 1;
+
+            return 0;
+        }
+        catch (IllegalArgumentException e) {
+            return 0;
+        }
+    }
+
+    public int checkWeaponTypeFile(String weaponType) {
+        try {
             WeaponType.valueOf(weaponType);
             return 1;
         }
@@ -80,4 +96,5 @@ public class CheckCorrectInput {
         if (car != null) return 1;
         return 0;
     }
+
 }

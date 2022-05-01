@@ -53,10 +53,14 @@ public class CommandsList {
             commands.get(commandName).execute(args, fromFile);
         } else {
             if (fromFile) {
-                System.out.println("Некорректная команда " + commandName + ". Завершение программы.");
-                exit(1);
+                System.out.println("Некорректная команда " + commandName);
+                return;
             }
             System.out.println("Команда не найдена. Повторите ввод.");
         }
+    }
+
+    public void stopExecute() {
+        return;
     }
 }

@@ -104,7 +104,8 @@ public class ParserToXml {
                 element.appendChild(elementCreationDate);
             }
 
-            File file = new File("result.xml");
+            String value = System.getenv("FILEPATH");
+            File file = new File(value);
 
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -112,7 +113,7 @@ public class ParserToXml {
 
         }
         catch (ParserConfigurationException | TransformerException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Ошибка сохранения коллекции");
         }
     }
 }

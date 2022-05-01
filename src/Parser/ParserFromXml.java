@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 
+import static java.lang.System.exit;
+
 /**
  * ParseFromXml class
  */
@@ -52,6 +54,9 @@ public class ParserFromXml {
     public LinkedList getCollection() {
         return collectionList;
     }
+    public Long getLastIdFromFile() {
+        return id;
+    }
 
     /**
      * Check that input file is correct
@@ -66,7 +71,7 @@ public class ParserFromXml {
         isCorrectInput *= checkCorrectInput.checkCoordinateY(y);
         isCorrectInput *= checkCorrectInput.checkRealHero(realHero);
         isCorrectInput *= checkCorrectInput.checkSoundtrackName(soundtrack);
-        isCorrectInput *= checkCorrectInput.checkWeaponType(weaponType);
+        isCorrectInput *= checkCorrectInput.checkWeaponTypeFile(weaponType);
         isCorrectInput *= checkCorrectInput.checkCar(car);
 
         if (isCorrectInput == 1) return true;
@@ -87,11 +92,11 @@ public class ParserFromXml {
      * Parse data from XML
      */
     public void parser(String args[]) {
-        String value = System.getenv(args[0]);
+        String value = System.getenv("FILEPATH");
         String argv[] = new String[1];
         argv[0] = value;
         if(!checkPathCorrect.checkPath(argv)) {
-            return;
+            exit(0);
         }
 
         File file = new File(argv[0].trim());
@@ -102,12 +107,12 @@ public class ParserFromXml {
             doc = dbf.newDocumentBuilder().parse(file);
         }
         catch (Exception e) {
-            System.out.println("Ошибка чтения файла");
+            System.out.println("Ошибка чтения файла. Нет доступа к нему.");
+            exit(1);
             return;
         }
 
         NodeList collection = doc.getElementsByTagName(TAG_ELEMENT);
-
         for (int i  = 0; i < collection.getLength(); i++) {
             if (collection.item(i).getNodeType() != Node.ELEMENT_NODE) {
                 continue;
@@ -166,7 +171,7 @@ public class ParserFromXml {
                 addToCollection();
                 id++;
             } else {
-                System.out.println("Элемент с id = " + id + " не может быть добавлен из - за некорректных данных");
+                System.out.println("Элемент с № " + id + " не может быть добавлен из - за некорректных данных");
             }
         }
 

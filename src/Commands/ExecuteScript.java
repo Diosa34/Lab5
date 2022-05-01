@@ -1,5 +1,6 @@
 package Commands;
 
+import App.CollectionManager;
 import App.CommandsList;
 import CheckCorrectData.CheckExistPath;
 import CheckCorrectData.CheckPathCorrect;
@@ -37,6 +38,7 @@ public class ExecuteScript implements Command{
             Path path;
             Path absolutePath;
             if (!checkPathCorrect.checkPath(args)) {
+                commandsList.stopExecute();
                 return;
             }
             else {
@@ -51,7 +53,8 @@ public class ExecuteScript implements Command{
 
             if (checkExistPath.checkExistPath(absolutePath)) {
                 System.out.println("Вызов скриптов зациклен");
-                exit(0);
+
+                commandsList.stopExecute();
             }
 
             Scanner inputFromFile = new Scanner(absolutePath);
@@ -61,8 +64,11 @@ public class ExecuteScript implements Command{
             }
 
         }
+        catch (NullPointerException e) {
+            //System.out.println("");
+        }
         catch (IOException e) {
-            System.out.print("Нет доступа к файлу.");
+            System.out.println("Нет доступа к файлу.");
         }
     }
 
