@@ -27,11 +27,21 @@ public class Main {
         parserFromXml.parser(args);
         collectionManager.mergeCollections(parserFromXml.getCollection(), parserFromXml.getLastIdFromFile());
 
-        Scanner input = new Scanner(System.in);
-        while (true) {
-            System.out.print("Введите команду: ");
-            String command = input.nextLine();
-            commandsList.execute(command, false);
+        try {
+            Scanner input = new Scanner(System.in);
+            while (true) {
+                System.out.print("Введите команду: ");
+                String command = input.nextLine();
+                commandsList.execute(command, false);
+            }
         }
+        catch (NoSuchElementException e) {
+            System.out.println("Завершение работы.");
+        }
+
+
+
+
+
     }
 }
