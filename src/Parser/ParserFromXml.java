@@ -116,7 +116,10 @@ public class ParserFromXml {
             System.out.println("Нет доступа к файлу. Проверьте разрешения на этот файл");
             exit(1);
         } catch (ParserConfigurationException | SAXException e) {
-            System.out.println("Ошибка обработки файла. Попробуйте еще раз.");
+            System.out.println("\n" +"Ошибка обработки файла. Попробуйте еще раз.");
+            System.out.println("Обратите внимание на то, что ваш файл должен начинаться со след.строки:");
+            System.out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+            System.out.println("Также он должен содержать любой открытый и закрытый тег.");
             exit(1);
         }
 
