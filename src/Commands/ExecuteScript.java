@@ -1,17 +1,14 @@
 package Commands;
 
-import App.CollectionManager;
 import App.CommandsList;
-import CheckCorrectData.CheckExistPath;
 import CheckCorrectData.CheckPathCorrect;
 
 import java.io.IOException;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Scanner;
 
-import static java.lang.System.exit;
 
 /**
  * ExecuteScript class
@@ -19,7 +16,7 @@ import static java.lang.System.exit;
 public class ExecuteScript implements Command{
     private final CommandsList commandsList;
     private final CheckPathCorrect checkPathCorrect = new CheckPathCorrect();
-    private final CheckExistPath checkExistPath = new CheckExistPath();
+    private HashSet<Path> existingPathList = new HashSet<>();
 
 
     public ExecuteScript(CommandsList commandsList) {
@@ -38,7 +35,6 @@ public class ExecuteScript implements Command{
             Path path;
             Path absolutePath;
             if (!checkPathCorrect.checkPath(args)) {
-                commandsList.stopExecute();
                 return;
             }
             else {
@@ -47,15 +43,13 @@ public class ExecuteScript implements Command{
                 absolutePath = base.resolve(path).toAbsolutePath();
             }
 
-            if (!fromFile) {
-                checkExistPath.clearList();
-            }
 
-            if (checkExistPath.checkExistPath(absolutePath)) {
+            if (existingPathList.contains(absolutePath)) {
                 System.out.println("Вызов скриптов зациклен");
-
-                commandsList.stopExecute();
+                return;
             }
+
+            existingPathList.add(absolutePath);
 
             Scanner inputFromFile = new Scanner(absolutePath);
             while (inputFromFile.hasNext()){
@@ -63,9 +57,8 @@ public class ExecuteScript implements Command{
                 commandsList.execute(command, true);
             }
 
-        }
-        catch (NullPointerException e) {
-            //System.out.println("");
+            existingPathList.clear();
+
         }
         catch (IOException e) {
             System.out.println("Нет доступа к файлу.");
