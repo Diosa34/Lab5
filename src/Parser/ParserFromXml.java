@@ -74,8 +74,7 @@ public class ParserFromXml {
         isCorrectInput *= checkCorrectInput.checkWeaponTypeFile(weaponType);
         isCorrectInput *= checkCorrectInput.checkCar(car);
 
-        if (isCorrectInput == 1) return true;
-        return false;
+        return isCorrectInput == 1;
     }
 
     /**
@@ -95,27 +94,30 @@ public class ParserFromXml {
         String value = System.getenv("FILEPATH");
         String argv[] = new String[1];
         argv[0] = value;
+
         if(!checkPathCorrect.checkPath(argv)) {
             exit(0);
         }
 
         File file = new File(argv[0].trim());
+
+        if (file.length() == 0) {
+            System.out.println("Вы подали на вход пустой файл. Все функции программы работают в прежнем режиме.");
+            return;
+        }
+
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        Document doc;
+        Document doc = null;
 
         try {
             doc = dbf.newDocumentBuilder().parse(file);
         }
-        catch (NullPointerException e) {
-            System.out.println("Ошибка чтения файла. Нет доступа к нему");
+        catch (IOException e) {
+            System.out.println("Нет доступа к файлу. Проверьте разрешения на этот файл");
             exit(1);
-            return;
-        }
-        catch (Exception e) {
-            System.out.println("Проверьте файл XML. Он должен содержать хотя бы один тег и следующую строчку:");
-            System.out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+        } catch (ParserConfigurationException | SAXException e) {
+            System.out.println("Ошибка обработки файла. Попробуйте еще раз.");
             exit(1);
-            return;
         }
 
         NodeList collection = doc.getElementsByTagName(TAG_ELEMENT);
@@ -169,12 +171,9 @@ public class ParserFromXml {
 
                     case TAG_CAR :
                         car = collectionChildren.item(j).getTextContent();
-                        int lol = 9;
-                        System.out.println(lol);
                         break;
                 }
             }
-
 
             if (check()) {
                 addToCollection();
@@ -183,6 +182,5 @@ public class ParserFromXml {
                 System.out.println("Элемент с № " + id + " не может быть добавлен из - за некорректных данных");
             }
         }
-
     }
 }
