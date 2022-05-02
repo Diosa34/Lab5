@@ -6,6 +6,8 @@ import Data.Car;
 import Data.Coordinates;
 import Data.HumanBeing;
 import Data.WeaponType;
+import Exceptions.PermissionFileException;
+import Exceptions.ProcessingFileException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -74,8 +76,7 @@ public class ParserFromXml {
         isCorrectInput *= checkCorrectInput.checkWeaponTypeFile(weaponType);
         isCorrectInput *= checkCorrectInput.checkCar(car);
 
-        if (isCorrectInput == 1) return true;
-        return false;
+        return isCorrectInput == 1;
     }
 
     /**
@@ -91,25 +92,37 @@ public class ParserFromXml {
     /**
      * Parse data from XML
      */
-    public void parser(String args[]) {
+    public void parser(String args[]) throws ProcessingFileException, PermissionFileException {
         String value = System.getenv("FILEPATH");
         String argv[] = new String[1];
         argv[0] = value;
+
         if(!checkPathCorrect.checkPath(argv)) {
             exit(0);
         }
 
         File file = new File(argv[0].trim());
+
+        if (file.length() == 0) {
+            System.out.println("Вы подали на вход пустой файл. Все функции программы работают в прежнем режиме.");
+            return;
+        }
+
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        Document doc;
+        Document doc = null;
 
         try {
             doc = dbf.newDocumentBuilder().parse(file);
         }
-        catch (Exception e) {
-            System.out.println("Ошибка чтения файла. Нет доступа к нему.");
-            exit(1);
-            return;
+        catch (IOException e) {
+            throw new PermissionFileException("Нет доступа к файлу. Проверьте разрешения на этот файл");
+
+        } catch (ParserConfigurationException | SAXException e) {
+            System.out.println("\n" +"Ошибка обработки файла. Попробуйте еще раз.");
+            System.out.println("Обратите внимание на то, что ваш файл должен начинаться со след.строки:");
+            System.out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+            System.out.println("Также он должен содержать любой открытый и закрытый тег.");
+            throw new ProcessingFileException();
         }
 
         NodeList collection = doc.getElementsByTagName(TAG_ELEMENT);
@@ -174,6 +187,5 @@ public class ParserFromXml {
                 System.out.println("Элемент с № " + id + " не может быть добавлен из - за некорректных данных");
             }
         }
-
     }
 }
