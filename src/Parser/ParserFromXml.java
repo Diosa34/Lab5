@@ -106,8 +106,14 @@ public class ParserFromXml {
         try {
             doc = dbf.newDocumentBuilder().parse(file);
         }
+        catch (NullPointerException e) {
+            System.out.println("Ошибка чтения файла. Нет доступа к нему");
+            exit(1);
+            return;
+        }
         catch (Exception e) {
-            System.out.println("Ошибка чтения файла. Нет доступа к нему.");
+            System.out.println("Проверьте файл XML. Он должен содержать хотя бы один тег и следующую строчку:");
+            System.out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
             exit(1);
             return;
         }
@@ -163,9 +169,12 @@ public class ParserFromXml {
 
                     case TAG_CAR :
                         car = collectionChildren.item(j).getTextContent();
+                        int lol = 9;
+                        System.out.println(lol);
                         break;
                 }
             }
+
 
             if (check()) {
                 addToCollection();

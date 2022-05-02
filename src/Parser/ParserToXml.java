@@ -110,7 +110,6 @@ public class ParserToXml {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(new DOMSource(doc), new StreamResult(file));
-
         }
         catch (ParserConfigurationException | TransformerException e) {
             System.out.println("Ошибка сохранения коллекции");
