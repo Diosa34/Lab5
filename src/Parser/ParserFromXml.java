@@ -6,6 +6,8 @@ import Data.Car;
 import Data.Coordinates;
 import Data.HumanBeing;
 import Data.WeaponType;
+import Exceptions.PermissionFileException;
+import Exceptions.ProcessingFileException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -90,7 +92,7 @@ public class ParserFromXml {
     /**
      * Parse data from XML
      */
-    public void parser(String args[]) {
+    public void parser(String args[]) throws ProcessingFileException, PermissionFileException {
         String value = System.getenv("FILEPATH");
         String argv[] = new String[1];
         argv[0] = value;
@@ -113,14 +115,14 @@ public class ParserFromXml {
             doc = dbf.newDocumentBuilder().parse(file);
         }
         catch (IOException e) {
-            System.out.println("Нет доступа к файлу. Проверьте разрешения на этот файл");
-            exit(1);
+            throw new PermissionFileException("Нет доступа к файлу. Проверьте разрешения на этот файл");
+
         } catch (ParserConfigurationException | SAXException e) {
             System.out.println("\n" +"Ошибка обработки файла. Попробуйте еще раз.");
             System.out.println("Обратите внимание на то, что ваш файл должен начинаться со след.строки:");
             System.out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
             System.out.println("Также он должен содержать любой открытый и закрытый тег.");
-            exit(1);
+            throw new ProcessingFileException();
         }
 
         NodeList collection = doc.getElementsByTagName(TAG_ELEMENT);

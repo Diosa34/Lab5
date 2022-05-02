@@ -1,5 +1,7 @@
 package App;
 
+import Exceptions.PermissionFileException;
+import Exceptions.ProcessingFileException;
 import Parser.ParserFromXml;
 
 import java.util.Arrays;
@@ -18,14 +20,19 @@ public class Main {
      *
      * @param args the input arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws ProcessingFileException, PermissionFileException {
 
         CollectionManager collectionManager = new CollectionManager();
         CommandsList commandsList = new CommandsList(collectionManager);
-
-        ParserFromXml parserFromXml = new ParserFromXml();
-        parserFromXml.parser(args);
-        collectionManager.mergeCollections(parserFromXml.getCollection(), parserFromXml.getLastIdFromFile());
+        try {
+            ParserFromXml parserFromXml = new ParserFromXml();
+            parserFromXml.parser(args);
+            collectionManager.mergeCollections(parserFromXml.getCollection(), parserFromXml.getLastIdFromFile());
+        }
+        catch (ProcessingFileException | PermissionFileException e) {
+            System.out.println("\n");
+            return;
+        }
 
         Scanner input = new Scanner(System.in);
         while (true) {

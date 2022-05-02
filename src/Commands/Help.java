@@ -23,6 +23,7 @@ public class Help implements Command {
         for (Command description: commands.values()) {
             System.out.println(description.toString());
         }
+        System.out.println();
     }
 
     @Override
