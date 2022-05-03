@@ -50,6 +50,15 @@ public class CheckCorrectInput {
         return 0;
     }
 
+    public int checkRealHeroFile(String realHero) {
+        if (realHero.equals(true) || realHero.equals(false)) return 1;
+        return 0;
+    }
+
+    public int checkHasToothpick(String hasToothpick) {
+        if(hasToothpick.equals(true) || hasToothpick.equals(false)) return 1;
+        return 0;
+    }
     /**
      *
      * @param soundtrackName soundtrack name

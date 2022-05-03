@@ -41,13 +41,16 @@ public class ParserFromXml {
 
     private CheckPathCorrect checkPathCorrect = new CheckPathCorrect();
     LinkedList<HumanBeing> collectionList = new LinkedList<>();
-    private Long id = 1L;
+    private Long id = 1L, numb = 1L;
 
-    private String name = null, car = "", soundtrack = "", weaponType = null;
+    private String name = null, car = "", soundtrack = "", weaponType = null, stringRealHero = "", stringHasToothpick = "";
     private Float x = Float.valueOf(1000000), y = Float.valueOf(1000000);
     private Boolean realHero = null, hasToothpick = null;
     private Long impactSpeed = null;
     private Integer minutesOfWaiting = null;
+
+    private boolean flagRealHero = true, flagHasToothpick = true;
+
 
     /**
      *
@@ -75,6 +78,8 @@ public class ParserFromXml {
         isCorrectInput *= checkCorrectInput.checkSoundtrackName(soundtrack);
         isCorrectInput *= checkCorrectInput.checkWeaponTypeFile(weaponType);
         isCorrectInput *= checkCorrectInput.checkCar(car);
+        isCorrectInput *= checkCorrectInput.checkHasToothpick(stringHasToothpick);
+        isCorrectInput *= checkCorrectInput.checkRealHeroFile(stringRealHero);
 
         return isCorrectInput == 1;
     }
@@ -116,8 +121,8 @@ public class ParserFromXml {
         }
         catch (IOException e) {
             throw new PermissionFileException("Нет доступа к файлу. Проверьте разрешения на этот файл");
-
-        } catch (ParserConfigurationException | SAXException e) {
+        }
+        catch (ParserConfigurationException | SAXException e) {
             System.out.println("\n" +"Ошибка обработки файла. Попробуйте еще раз.");
             System.out.println("Обратите внимание на то, что ваш файл должен начинаться со след.строки:");
             System.out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
@@ -125,67 +130,77 @@ public class ParserFromXml {
             throw new ProcessingFileException();
         }
 
-        NodeList collection = doc.getElementsByTagName(TAG_ELEMENT);
-        for (int i  = 0; i < collection.getLength(); i++) {
-            if (collection.item(i).getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-
-            NodeList collectionChildren = collection.item(i).getChildNodes();
-            for (int j = 0; j < collectionChildren.getLength(); j++) {
-                if (collectionChildren.item(j).getNodeType() != Node.ELEMENT_NODE) {
+        try {
+            NodeList collection = doc.getElementsByTagName(TAG_ELEMENT);
+            for (int i  = 0; i < collection.getLength(); i++) {
+                if (collection.item(i).getNodeType() != Node.ELEMENT_NODE) {
                     continue;
                 }
 
-                switch(collectionChildren.item(j).getNodeName()) {
-                    case TAG_NAME :
-                        name = collectionChildren.item(j).getTextContent();
-                        break;
+                NodeList collectionChildren = collection.item(i).getChildNodes();
+                for (int j = 0; j < collectionChildren.getLength(); j++) {
+                    if (collectionChildren.item(j).getNodeType() != Node.ELEMENT_NODE) {
+                        continue;
+                    }
 
-                    case TAG_COORDINATE_X :
-                        x = Float.parseFloat(collectionChildren.item(j).getTextContent());
-                        break;
+                    switch (collectionChildren.item(j).getNodeName()) {
+                        case TAG_NAME:
+                            name = collectionChildren.item(j).getTextContent();
+                            break;
 
-                    case TAG_COORDINATE_Y :
-                        y = Float.parseFloat(collectionChildren.item(j).getTextContent());
-                        break;
+                        case TAG_COORDINATE_X:
+                            x = Float.parseFloat(collectionChildren.item(j).getTextContent());
+                            break;
 
-                    case TAG_REAL_HERO :
-                        realHero = Boolean.parseBoolean(collectionChildren.item(j).getTextContent());
-                        break;
+                        case TAG_COORDINATE_Y:
+                            y = Float.parseFloat(collectionChildren.item(j).getTextContent());
+                            break;
 
-                    case TAG_HAS_TOOTHPICK :
-                        hasToothpick = Boolean.parseBoolean(collectionChildren.item(j).getTextContent());
-                        break;
+                        case TAG_REAL_HERO:
+                            stringRealHero = collectionChildren.item(j).getTextContent();
+                            realHero = Boolean.parseBoolean(collectionChildren.item(j).getTextContent());
+                            break;
 
-                    case TAG_IMPACT_SPEED :
-                        impactSpeed = Long.parseLong(collectionChildren.item(j).getTextContent());
-                        break;
+                        case TAG_HAS_TOOTHPICK:
+                            stringHasToothpick = collectionChildren.item(j).getTextContent();
+                            hasToothpick = Boolean.parseBoolean(collectionChildren.item(j).getTextContent());
+                            break;
 
-                    case TAG_SOUNDTRACK_NAME :
-                        soundtrack = collectionChildren.item(j).getTextContent();
-                        break;
+                        case TAG_IMPACT_SPEED:
+                            impactSpeed = Long.parseLong(collectionChildren.item(j).getTextContent());
+                            break;
 
-                    case TAG_MINUTES_OF_WAITING:
-                        minutesOfWaiting = Integer.parseInt(collectionChildren.item(j).getTextContent());
-                        break;
+                        case TAG_SOUNDTRACK_NAME:
+                            soundtrack = collectionChildren.item(j).getTextContent();
+                            break;
 
-                    case TAG_WEAPON_TYPE :
-                        weaponType = collectionChildren.item(j).getTextContent();
-                        break;
+                        case TAG_MINUTES_OF_WAITING:
+                            minutesOfWaiting = Integer.parseInt(collectionChildren.item(j).getTextContent());
+                            break;
 
-                    case TAG_CAR :
-                        car = collectionChildren.item(j).getTextContent();
-                        break;
+                        case TAG_WEAPON_TYPE:
+                            weaponType = collectionChildren.item(j).getTextContent();
+                            break;
+
+                        case TAG_CAR:
+                            car = collectionChildren.item(j).getTextContent();
+                            break;
+                    }
+                }
+                if (check()) {
+                    addToCollection();
+                    numb++;
+                    id++;
+                } else {
+                    System.out.println("Элемент с № " + numb + " не может быть добавлен из - за некорректных данных");
+                    numb++;
                 }
             }
-
-            if (check()) {
-                addToCollection();
-                id++;
-            } else {
-                System.out.println("Элемент с № " + id + " не может быть добавлен из - за некорректных данных");
-            }
+        }
+        catch (NumberFormatException e) {
+            System.out.println("Некорректные данные.");
+            System.out.println("Продолжение работы в прежнем режиме");
+            return;
         }
     }
 }
