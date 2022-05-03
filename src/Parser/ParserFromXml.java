@@ -41,13 +41,16 @@ public class ParserFromXml {
 
     private CheckPathCorrect checkPathCorrect = new CheckPathCorrect();
     LinkedList<HumanBeing> collectionList = new LinkedList<>();
-    private Long id = 1L, numb = 0L;
+    private Long id = 1L, numb = 1L;
 
-    private String name = null, car = "", soundtrack = "", weaponType = null;
+    private String name = null, car = "", soundtrack = "", weaponType = null, stringRealHero = "", stringHasToothpick = "";
     private Float x = Float.valueOf(1000000), y = Float.valueOf(1000000);
     private Boolean realHero = null, hasToothpick = null;
     private Long impactSpeed = null;
     private Integer minutesOfWaiting = null;
+
+    private boolean flagRealHero = true, flagHasToothpick = true;
+
 
     /**
      *
@@ -75,6 +78,8 @@ public class ParserFromXml {
         isCorrectInput *= checkCorrectInput.checkSoundtrackName(soundtrack);
         isCorrectInput *= checkCorrectInput.checkWeaponTypeFile(weaponType);
         isCorrectInput *= checkCorrectInput.checkCar(car);
+        isCorrectInput *= checkCorrectInput.checkHasToothpick(stringHasToothpick);
+        isCorrectInput *= checkCorrectInput.checkRealHeroFile(stringRealHero);
 
         return isCorrectInput == 1;
     }
@@ -152,10 +157,12 @@ public class ParserFromXml {
                             break;
 
                         case TAG_REAL_HERO:
+                            stringRealHero = collectionChildren.item(j).getTextContent();
                             realHero = Boolean.parseBoolean(collectionChildren.item(j).getTextContent());
                             break;
 
                         case TAG_HAS_TOOTHPICK:
+                            stringHasToothpick = collectionChildren.item(j).getTextContent();
                             hasToothpick = Boolean.parseBoolean(collectionChildren.item(j).getTextContent());
                             break;
 
